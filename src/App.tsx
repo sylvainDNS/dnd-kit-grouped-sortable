@@ -2,6 +2,7 @@ import * as React from "react";
 import { SortableGroups } from "./SortableGroups";
 import "./styles.css";
 import { DropZone, Group, GroupedSortable, SortableItem, useGroupedSortableContext, type Item } from "./GroupedSortable";
+import { ItemsTable } from "./ItemsTable";
 
 const initialItems = [
   { id: "a1", label: "Item A1", position: 1 },
@@ -37,6 +38,7 @@ const Layout = () => {
 
 export default function App() {
   const [items, setItems] = React.useState<Item[]>(initialItems);
+  const [simplifiedItems, setSimplifiedItems] = React.useState<Item[]>(initialItems);
 
   return (
     <div className="App">
@@ -50,12 +52,20 @@ export default function App() {
         <tbody>
           <tr>
             <td>
-              <SortableGroups />
+              <SortableGroups onItemsChange={setSimplifiedItems} />
             </td>
             <td>
               <GroupedSortable items={items} onItemsChange={setItems}>
                 <Layout />
               </GroupedSortable>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <ItemsTable items={items} title="All Data" />
+            </td>
+            <td>
+              <ItemsTable items={simplifiedItems} title="Simplified POC Data" />
             </td>
           </tr>
         </tbody>

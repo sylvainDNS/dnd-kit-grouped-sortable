@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import {
   DndContext,
@@ -138,7 +138,7 @@ interface GroupProps {
   items: Item[];
 }
 
-const Group = ({ id, items }: GroupProps) => (
+const Group = ({ id: _id, items }: GroupProps) => (
   <div className={styles.Group}>
     <SortableContext
       items={items.map((item) => item.id)}
@@ -153,9 +153,18 @@ const Group = ({ id, items }: GroupProps) => (
   </div>
 );
 
-export const SortableGroups = () => {
+interface SortableGroupsProps {
+  onItemsChange?: (items: Item[]) => void;
+}
+
+export const SortableGroups = ({ onItemsChange }: SortableGroupsProps = {}) => {
   const [items, setItems] = useState<Item[]>(initialItems);
   const [activeId, setActiveId] = useState<UniqueIdentifier | null>(null);
+
+  // Expose items to parent component
+  useEffect(() => {
+    onItemsChange?.(items);
+  }, [items, onItemsChange]);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
