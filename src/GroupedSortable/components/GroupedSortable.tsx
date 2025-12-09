@@ -23,6 +23,7 @@ export const GroupedSortable = ({items, onItemsChange, children}: Props) => {
     groups,
     isDragging,
     activeId,
+    overGroupId,
     findItem,
     setActiveId,
   } = useGroupedSortable({items, onItemsChange});
@@ -44,6 +45,7 @@ export const GroupedSortable = ({items, onItemsChange, children}: Props) => {
         activeId,
         activeItem,
         isDragging,
+        overGroupId,
         findItem,
         setActiveId,
         setItems,

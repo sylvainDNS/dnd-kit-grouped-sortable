@@ -11,13 +11,13 @@ interface Props {
   children?: React.ReactNode;
 }
 
-export const Group = ({id, items, title, children}: Props) => {
-  const {groups} = useGroupedSortableContext();
+export const Group = ({id, items, children}: Props) => {
+  const {groups, overGroupId} = useGroupedSortableContext();
   const groupItems = items ?? groups.get(id) ?? [];
+  const isOver = overGroupId === id;
 
   return (
-    <div className={styles.Group}>
-      <h3 className={styles.GroupTitle}>{title ?? `Group ${id}`}</h3>
+    <div className={`${styles.Group} ${isOver ? styles.groupOver : ''}`}>
       <SortableContext
         items={groupItems.map((item) => item.id)}
         strategy={verticalListSortingStrategy}

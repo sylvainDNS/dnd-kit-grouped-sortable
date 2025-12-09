@@ -29,6 +29,7 @@ export const useGroupedSortable = ({
   onItemsChange,
 }: UseGroupedSortableProps) => {
   const [activeId, setActiveId] = React.useState<UniqueIdentifier | null>(null);
+  const [overGroupId, setOverGroupId] = React.useState<number | null>(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -51,21 +52,36 @@ export const useGroupedSortable = ({
 
   const handleDragStart = React.useCallback(({active}: DragStartEvent) => {
     setActiveId(active.id);
+    setOverGroupId(null);
   }, []);
 
   const handleDragOver = React.useCallback(
     ({active, over}: DragOverEvent) => {
-      if (!over) return;
+      if (!over) {
+        setOverGroupId(null);
+        return;
+      }
 
       const activeItem = findItem(active.id);
-      if (!activeItem) return;
+      if (!activeItem) {
+        setOverGroupId(null);
+        return;
+      }
 
-      // If dragging over a drop zone, don't do anything in dragOver
-      // The actual creation will happen in dragEnd
-      if (isDropZone(over.data?.current)) return;
+      // If dragging over a drop zone, clear the over group
+      if (isDropZone(over.data?.current)) {
+        setOverGroupId(null);
+        return;
+      }
 
       const overItem = findItem(over.id);
-      if (!overItem) return;
+      if (!overItem) {
+        setOverGroupId(null);
+        return;
+      }
+
+      // Track which group we're over
+      setOverGroupId(overItem.position);
 
       const isOverSameGroup = activeItem.position === overItem.position;
       if (isOverSameGroup) return;
@@ -89,6 +105,7 @@ export const useGroupedSortable = ({
   const handleDragEnd = React.useCallback(
     ({active, over}: DragEndEvent) => {
       setActiveId(null);
+      setOverGroupId(null);
 
       if (!over) return;
 
@@ -133,6 +150,7 @@ export const useGroupedSortable = ({
     positions,
     groups,
     isDragging,
+    overGroupId,
     findItem,
     setActiveId,
     handleDragStart,

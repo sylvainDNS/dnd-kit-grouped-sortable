@@ -140,7 +140,6 @@ interface GroupProps {
 
 const Group = ({ id, items }: GroupProps) => (
   <div className={styles.Group}>
-    <h3 className={styles.GroupTitle}>Group {id}</h3>
     <SortableContext
       items={items.map((item) => item.id)}
       strategy={verticalListSortingStrategy}

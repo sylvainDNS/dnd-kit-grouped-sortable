@@ -18,6 +18,7 @@ export interface GroupedSortableContextValue {
   activeId: UniqueIdentifier | null;
   activeItem: Item | undefined;
   isDragging: boolean;
+  overGroupId: number | null;
   findItem(id: UniqueIdentifier): Item | undefined;
   setActiveId(id: UniqueIdentifier | null): void;
   setItems(updater: (items: Item[]) => Item[] | Item[]): void;
